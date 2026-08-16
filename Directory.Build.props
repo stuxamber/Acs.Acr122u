@@ -1,0 +1,38 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <Company>Your Organization</Company>
+    <Authors>Your Organization</Authors>
+    <Copyright>Copyright (c) 2026</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+
+    <!--
+      AnalysisLevel is "latest-all", the strictest setting, which surfaces a number of rules that
+      don't fit this library and are suppressed deliberately below rather than by weakening
+      AnalysisLevel itself:
+        CA1028 - byte-backed enums are intentional: these enums model exact 1-byte wire values
+                 from the ACR122U spec (key types, PICC parameters, LED flags, etc.), and casting
+                 to/from byte is the whole point.
+        CA1008 - a required "zero-value member" doesn't make sense for enums that mirror specific
+                 non-zero protocol byte values (e.g. KeyType.TypeA = 0x60).
+        CA1711 - "LedControlFlags" ending in "Flags" is the clearest possible name for what it is.
+        CA1027 - ContactlessModulationType is a discrete PN532 enum value, not a bit-flag set.
+        CA1024 - the Acr122uCommands builder methods return a *new* CommandApdu each call and read
+                 more naturally as verbs ("GetUid()") than as properties.
+        CA1815 - ResponseApdu is a short-lived transport value never used in equality comparisons
+                 or collections; adding Equals/== would be unused surface area.
+        CA1819 - AtrInfo.Raw/HistoricalBytes intentionally expose raw byte buffers; this is a
+                 low-level protocol library where copying defensively on every access isn't worth
+                 the cost, and callers are expected to treat them as read-only.
+    -->
+    <NoWarn>$(NoWarn);CA1028;CA1008;CA1711;CA1027;CA1024;CA1815;CA1819</NoWarn>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Acs.Acr122u</RootNamespace>
+    <AssemblyName>Acs.Acr122u</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>Acs.Acr122u</PackageId>
+    <Version>1.0.0</Version>
+    <Description>A dependency-free, fully-documented .NET 10 client library for the ACS ACR122U USB NFC reader, implementing the ACR122U Application Programming Interface v2.04 specification over PC/SC.</Description>
+    <PackageTags>acr122u;nfc;rfid;mifare;pcsc;smartcard;acs</PackageTags>
+    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
