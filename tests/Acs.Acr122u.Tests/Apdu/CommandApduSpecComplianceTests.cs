@@ -12,8 +12,11 @@ namespace Acs.Acr122u.Tests.Apdu;
 /// </summary>
 public sealed class CommandApduSpecComplianceTests
 {
-    private static void AssertHex(string expectedHex, byte[] actual) =>
+    private static void AssertHex(string expectedHex, byte[] actual)
+    {
+        ArgumentNullException.ThrowIfNull(expectedHex);
         Assert.Equal(expectedHex.Replace(" ", string.Empty, StringComparison.Ordinal), Convert.ToHexString(actual));
+    }
 
     // ---- §4.1 Get Data (Command Format table; no worked numeric example given in the spec) -----------
 
@@ -127,6 +130,8 @@ public sealed class CommandApduSpecComplianceTests
     [InlineData(1, "00 00 00 01")] // §5.5.1 Example 2: Decimal 1 = {00h, 00h, 00h, 01h}
     public void WriteValueBlockEncodesValueAsBigEndianSignedInt32(int value, string expectedValueHex)
     {
+        ArgumentNullException.ThrowIfNull(expectedValueHex);
+
         var command = Acr122uCommands.WriteValueBlock(0x05, ValueBlockOperation.Store, value);
         var bytes = command.ToByteArray();
 

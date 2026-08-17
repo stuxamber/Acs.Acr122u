@@ -25,7 +25,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(Convert.FromHexString("41435231323255323031"));
         using var reader = new Acr122uReader(transport);
 
-        var version = await reader.GetFirmwareVersionAsync().ConfigureAwait(false);
+        var version = await reader.GetFirmwareVersionAsync().ConfigureAwait(true);
 
         Assert.Equal("ACR122U201", version);
     }
@@ -39,7 +39,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x04, 0xA3, 0x22, 0x91, 0x90, 0x00);
         using var reader = new Acr122uReader(transport);
 
-        var uid = await reader.GetUidAsync().ConfigureAwait(false);
+        var uid = await reader.GetUidAsync().ConfigureAwait(true);
 
         byte[] expectedUid = [0x04, 0xA3, 0x22, 0x91];
         Assert.Equal(expectedUid, uid);
@@ -52,7 +52,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x63, 0x00); // documented "operation failed" error code
         using var reader = new Acr122uReader(transport);
 
-        var exception = await Assert.ThrowsAsync<Acr122uCommandException>(() => reader.GetUidAsync()).ConfigureAwait(false);
+        var exception = await Assert.ThrowsAsync<Acr122uCommandException>(() => reader.GetUidAsync()).ConfigureAwait(true);
 
         Assert.Equal(nameof(reader.GetUidAsync), exception.OperationName);
         Assert.Equal(0x63, exception.Response.Sw1);
@@ -68,7 +68,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x90, 0x00);
         using var reader = new Acr122uReader(transport);
 
-        var authenticated = await reader.TryAuthenticateAsync(0x04, KeyType.TypeA, KeySlot.Slot0).ConfigureAwait(false);
+        var authenticated = await reader.TryAuthenticateAsync(0x04, KeyType.TypeA, KeySlot.Slot0).ConfigureAwait(true);
 
         Assert.True(authenticated);
     }
@@ -80,7 +80,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x63, 0x00);
         using var reader = new Acr122uReader(transport);
 
-        var authenticated = await reader.TryAuthenticateAsync(0x04, KeyType.TypeA, KeySlot.Slot0).ConfigureAwait(false);
+        var authenticated = await reader.TryAuthenticateAsync(0x04, KeyType.TypeA, KeySlot.Slot0).ConfigureAwait(true);
 
         Assert.False(authenticated);
     }
@@ -97,7 +97,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(raw);
         using var reader = new Acr122uReader(transport);
 
-        var value = await reader.ReadValueBlockAsync(0x05).ConfigureAwait(false);
+        var value = await reader.ReadValueBlockAsync(0x05).ConfigureAwait(true);
 
         Assert.Equal(expectedValue, value);
     }
@@ -112,7 +112,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x90, 0x03);
         using var reader = new Acr122uReader(transport);
 
-        var result = await reader.SetLedAndBuzzerAsync(LedBuzzerControlRequest.SetSolid(red: true, green: true)).ConfigureAwait(false);
+        var result = await reader.SetLedAndBuzzerAsync(LedBuzzerControlRequest.SetSolid(red: true, green: true)).ConfigureAwait(true);
 
         Assert.True(result.RedOn);
         Assert.True(result.GreenOn);
@@ -126,7 +126,7 @@ public sealed class Acr122uReaderTests
         transport.EnqueueResponse(0x90, 0x02);
         using var reader = new Acr122uReader(transport);
 
-        var result = await reader.SetLedAndBuzzerAsync(new LedBuzzerControlRequest { Flags = LedControlFlags.UpdateRedState }).ConfigureAwait(false);
+        var result = await reader.SetLedAndBuzzerAsync(new LedBuzzerControlRequest { Flags = LedControlFlags.UpdateRedState }).ConfigureAwait(true);
 
         Assert.False(result.RedOn);
         Assert.True(result.GreenOn);
@@ -142,6 +142,6 @@ public sealed class Acr122uReaderTests
         using var reader = new Acr122uReader(transport);
 
         await Assert.ThrowsAsync<Acr122uCommandException>(
-            () => reader.SetLedAndBuzzerAsync(LedBuzzerControlRequest.SetSolid(red: true, green: true))).ConfigureAwait(false);
+            () => reader.SetLedAndBuzzerAsync(LedBuzzerControlRequest.SetSolid(red: true, green: true))).ConfigureAwait(true);
     }
 }
