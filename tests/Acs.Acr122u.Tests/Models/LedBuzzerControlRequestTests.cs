@@ -43,20 +43,24 @@ public sealed class LedBuzzerControlRequestTests
     [Fact]
     public void BlinkDurationBeyond25500MsThrows()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            LedBuzzerControlRequest.Blink(
-                red: true, green: false,
-                onDuration: TimeSpan.FromMilliseconds(25600), offDuration: TimeSpan.Zero,
-                repeatCount: 1));
+        var request = LedBuzzerControlRequest.Blink(
+            red: true, green: false,
+            onDuration: TimeSpan.FromMilliseconds(25600), offDuration: TimeSpan.Zero,
+            repeatCount: 1);
+
+        // The 100 ms-unit range check happens when the request is converted to wire bytes
+        // (ToBytes(), called from SetLedAndBuzzer), not when Blink() builds the request itself.
+        Assert.Throws<ArgumentOutOfRangeException>(() => Acr122uCommands.SetLedAndBuzzer(request));
     }
 
     [Fact]
     public void BlinkNegativeDurationThrows()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            LedBuzzerControlRequest.Blink(
-                red: true, green: false,
-                onDuration: TimeSpan.FromMilliseconds(-100), offDuration: TimeSpan.Zero,
-                repeatCount: 1));
+        var request = LedBuzzerControlRequest.Blink(
+            red: true, green: false,
+            onDuration: TimeSpan.FromMilliseconds(-100), offDuration: TimeSpan.Zero,
+            repeatCount: 1);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Acr122uCommands.SetLedAndBuzzer(request));
     }
 }
