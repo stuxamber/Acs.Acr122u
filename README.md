@@ -136,15 +136,33 @@ platform dependency.
 ```
 src/Acs.Acr122u/            The library
 samples/Acs.Acr122u.Sample/ A runnable console sample
+tests/Acs.Acr122u.Tests/    Unit tests (see "Testing" below)
 docs/                       This document and any supplementary notes
 ```
 
 ## Building
 
 ```bash
-dotnet build src/Acs.Acr122u/Acs.Acr122u.csproj
+dotnet build Acs.Acr122u.sln
 dotnet run --project samples/Acs.Acr122u.Sample
 ```
+
+## Testing
+
+`tests/Acs.Acr122u.Tests` is an xUnit suite that verifies the library against the ACR122U API
+specification (v2.04) directly — most tests assert that a command builder produces the exact byte
+sequence given in one of the spec's worked examples (Appendix E's LED/buzzer examples, the value
+block encoding examples, the ATR examples in §3.1, etc.), so a failing test points straight back to
+the relevant spec section and page. A `FakeSmartCardTransport` test double exercises
+`Acr122uReader`'s response parsing and status-word validation against those same documented
+formats and examples, without needing a real reader or Windows. Run everything with:
+
+```bash
+dotnet test tests/Acs.Acr122u.Tests/Acs.Acr122u.Tests.csproj
+```
+
+The tests are entirely self-contained (no hardware or PC/SC service required) and run on any OS,
+even though the shipping library's default transport is Windows-only.
 
 ## License
 
