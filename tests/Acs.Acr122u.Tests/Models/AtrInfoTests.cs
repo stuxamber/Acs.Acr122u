@@ -41,12 +41,12 @@ public sealed class AtrInfoTests
     {
         // §3.1.2 example: "ST19XRC8E (ATR) = 3B 8C 80 01 50 12 23 45 56 12 53 54 4E 33 81 C3 55h"
         // "the response would be ATQB which is 50 12 23 45 56 12 53 54 4E 33 81 C3h is 12 bytes long"
-        byte[] atr = Convert.FromHexString("3B8C8001501223455612534E3381C355");
+        byte[] atr = Convert.FromHexString("3B8C800150122345561253544E3381C355");
 
         var info = AtrInfo.Parse(atr);
 
         Assert.Equal(CardKind.Iso14443Part4, info.Kind);
-        Assert.Equal(Convert.FromHexString("501223455612534E3381C3"), info.HistoricalBytes);
+        Assert.Equal(Convert.FromHexString("50122345561253544E3381C3"), info.HistoricalBytes);
     }
 
     [Theory]
